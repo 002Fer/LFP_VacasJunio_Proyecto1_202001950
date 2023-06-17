@@ -1,9 +1,19 @@
 from tkinter import *
-
-from tkinter.filedialog import askopenfile
+from modulo_afd import listasimple
+from tkinter.filedialog import askopenfilename
+from graphviz import Digraph
+import webbrowser
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4 
 
 import os
-
+lis=[]
+lis_nombre=[]
+lis_estados=[]
+lis_alfabeto=[]
+lis_estadoI=[]
+lis_estadosAcep=[]
+lista_aux=[]
 class Mi_ventan(Frame):
     
 
@@ -13,9 +23,10 @@ class Mi_ventan(Frame):
         self.pack()
         self.ventana_principal()
 
+
     def ventana_principal(self):
 
-        self.boton_abrir=Button(self, text='Cargar archivo', bg='#BDBDBD', command=self.buscar_archivo)
+        self.boton_abrir=Button(self, text='Cargar archivo', bg='#BDBDBD', command=self.ventana_seleccionar_archivo)
 
         self.boton_afn=Button(self, text='AFN',bg='#BDBDBD', command=self.modulo_afn )
         self.boton_afd=Button(self,text='AFD',bg='#BDBDBD',command=self.modulo_afd)
@@ -45,7 +56,7 @@ class Mi_ventan(Frame):
 
         boton_crearAFD=Button(ventana2, text='Crear AFD',bg='#BDBDBD', command=self.formulario_afd )
         boton_evaluar=Button(ventana2, text='Evaluar cadena',bg='#BDBDBD' )
-        boton_reporte=Button(ventana2, text='Generar Reporte',bg='#BDBDBD' )
+        boton_reporte=Button(ventana2, text='Generar Reporte',bg='#BDBDBD', command=self.generarPDF )
         boton_ayuda=Button(ventana2, text='Ayuda',bg='#BDBDBD' )
         boton_salir=Button(ventana2, text='Salir',bg='#BDBDBD', command=ventana2.destroy )
 
@@ -63,7 +74,7 @@ class Mi_ventan(Frame):
 
         boton_crearAFD=Button(ventana3, text='Crear AFD',bg='#BDBDBD',command=self.formulario_afn )
         boton_evaluar=Button(ventana3, text='Evaluar cadena',bg='#BDBDBD' )
-        boton_reporte=Button(ventana3, text='Generar Reporte',bg='#BDBDBD' )
+        boton_reporte=Button(ventana3, text='Generar Reporte',bg='#BDBDBD',command=self.generarPDF_AFN )
         boton_ayuda=Button(ventana3, text='Ayuda',bg='#BDBDBD' )
         boton_salir=Button(ventana3, text='Salir',bg='#BDBDBD', command=ventana3.destroy)
 
@@ -86,12 +97,12 @@ class Mi_ventan(Frame):
         label_estadoAcep=Label(ventana4, text="Estados de aceptacion",bg='#BDBDBD')
         label_transicion=Label(ventana4, text="Transicion",bg='#BDBDBD')
 
-        nombre=Entry(ventana4)
-        estado=Entry(ventana4)
-        alfabeto=Entry(ventana4)
-        estadoI=Entry(ventana4)
-        estadoAcep=Entry(ventana4)
-        transicion=Entry(ventana4)
+        self.nombre_afn=Entry(ventana4)
+        self.estado_afn=Entry(ventana4)
+        self.alfabeto_afn=Entry(ventana4)
+        self.estadoI_afn=Entry(ventana4)
+        self.estadoAcep_afn=Entry(ventana4)
+        self.transicion_afn=Text(ventana4)
 
         label_nombre.place(x=75,y=5, width=120, height=30)
         label_estados.place(x=75,y=45, width=120, height=30)
@@ -100,15 +111,37 @@ class Mi_ventan(Frame):
         label_estadoAcep.place(x=75,y=165, width=120, height=30)
         label_transicion.place(x=75,y=205, width=120, height=30)
 
-        nombre.place(x=250,y=5, width=150, height=30)
-        estado.place(x=250,y=45, width=150, height=30)
-        alfabeto.place(x=250,y=85, width=150, height=30)
-        estadoI.place(x=250,y=125, width=150, height=30)
-        estadoAcep.place(x=250,y=165, width=150, height=30)
-        transicion.place(x=250,y=205, width=150, height=30)
+        self.nombre_afn.place(x=250,y=5, width=150, height=30)
+        self.estado_afn.place(x=250,y=45, width=150, height=30)
+        self.alfabeto_afn.place(x=250,y=85, width=150, height=30)
+        self.estadoI_afn.place(x=250,y=125, width=150, height=30)
+        self.estadoAcep_afn.place(x=250,y=165, width=150, height=30)
+        self.transicion_afn.place(x=250,y=205, width=150, height=40)
 
-        boton_Guardar=Button(ventana4, text="Guardar")
+        boton_Guardar=Button(ventana4, text="Guardar",command=self.imprimir)
         boton_Guardar.place(x=200, y=250, width=100, height=30)
+
+
+    def recogerDatos_afn(self):
+        
+        nombre1=self.nombre_afn.get()
+        estados1=self.estado_afn.get()
+        alfabeto1=self.alfabeto_afn.get()
+        estadoI1=self.estadoI_afn.get()
+        estadoA1=self.estadoAcep_afn.get()
+        trans1=self.transicion_afn.get()
+        lista_aux.append(nombre1)
+        lista_aux.append(estados1)
+        lista_aux.append(alfabeto1)
+        lista_aux.append(estadoI1)
+        lista_aux.append(estadoA1)
+        lista_aux.append(trans1)
+
+        lis.append(lista_aux)
+
+    def imprimir(self):
+        for i in lis:
+            print(i)
 
     def formulario_afd(self):
         ventana6=Toplevel()
@@ -123,21 +156,21 @@ class Mi_ventan(Frame):
         label_estadoAcep=Label(ventana6, text="Estados de aceptacion",bg='#BDBDBD')
         label_transicion=Label(ventana6, text="Transicion",bg='#BDBDBD')
 
-        nombre=Entry(ventana6)
+        self.nombre=Entry(ventana6)
         estado=Entry(ventana6)
         alfabeto=Entry(ventana6)
         estadoI=Entry(ventana6)
         estadoAcep=Entry(ventana6)
-        transicion=Entry(ventana6)
+        transicion=Text(ventana6)
 
         label_nombre.place(x=75,y=5, width=120, height=30)
         label_estados.place(x=75,y=45, width=120, height=30)
         label_alfabeto.place(x=75,y=85, width=120, height=30)
         label_estadoI.place(x=75,y=125, width=120, height=30)
         label_estadoAcep.place(x=75,y=165, width=120, height=30)
-        label_transicion.place(x=75,y=205, width=120, height=30)
+        label_transicion.place(x=75,y=205, width=120, height=40)
 
-        nombre.place(x=250,y=5, width=150, height=30)
+        self.nombre.place(x=250,y=5, width=150, height=30)
         estado.place(x=250,y=45, width=150, height=30)
         alfabeto.place(x=250,y=85, width=150, height=30)
         estadoI.place(x=250,y=125, width=150, height=30)
@@ -159,12 +192,148 @@ class Mi_ventan(Frame):
         boton_seleccionar.place(x=100, y=50, width=120, height=30)
         boton_reporte.place(x=100, y=100, width=120, height=30)
 
+    def ventana_seleccionar_archivo(self):
+        ventana_abrir=Toplevel()
+        ventana_abrir.geometry("500x350")
+        ventana_abrir.config(bg='#04B45F')
+
+        boton_afn=Button(ventana_abrir,text="Seleccionar AFD",command=self.buscar_archivo)
+        boton_afd=Button(ventana_abrir, text="Seleccionar AFN", command=self.buscar_archivo2)
+        boton_regresar=Button(ventana_abrir, text="Regresar",command=ventana_abrir.destroy)
+
+        boton_afn.place(x=100, y=50, width=120, height=30)
+        boton_afd.place(x=100, y=100, width=120, height=30)
+        boton_regresar.place(x=100,y=170,width=120, height=30)
+
+
     def buscar_archivo(self):
-      self.ventana=askopenfile(title="seleccione el archivo")
-      print("se cargo el archivo")
+        lista=listasimple()
+        try:
+            self.file = askopenfilename(title="Cargar un archivo", filetypes=[("Archivos", f'*.afd')])
+            self.text = self.file
+            self.openfile = open(self.text, encoding="utf-8")
+            self.archivo = self.openfile.read().split("\n")
+            
+            for lineas in self.archivo:
+                #archivo2=lineas.split("\n")
+                lis.append(lineas)
+            print(lis)
+            print(lis[0])
+            print(lis[12])
+            print("%" in lis)
+
+        except:
+            print('Error, no se ha seleccionado ningún archivo')
+
+    def buscar_archivo2(self):
       
-      print('se cargo el archivo seleccionado')
+        try:
+            self.file = askopenfilename(title="Cargar un archivo", filetypes=[("Archivos", f'*.afn')])
+            self.text = self.file
+            self.openfile = open(self.text, encoding="utf-8")
+            self.archivo = self.openfile.read().split("\n")
+            
+            
+            for lineas in self.archivo:
+                
+                lis_nombre.append(lineas)
+            
+        except:
+            print('Error, no se ha seleccionado ningún archivo')
+
+    def generarDOT(self):
+        dot = Digraph('AFD', filename='AFDPrueba', format='png')
+        dot.attr(rankdir='LR', size='8,5')
+        dot.attr('node', shape='doublecircle')
+        dot.node('B')
+        dot.attr('node', shape='circle')
+        dot.node('A')
+        dot.edge('A', 'B', label='1') # A,1;B
+        dot.render('AFDPrueba', view=False)
+
+    def generarPDF(self):
+        w, h = A4
+        pdf = canvas.Canvas("ReporteAFD.pdf", pagesize=A4)
+        pdf.setTitle("Reporte de AFD")
+        text = pdf.beginText(50, h - 50)
+        text.setFont("Times-Roman", 12)
+
+        aux=0
+        indice=0
         
+        while aux < len(lis):
+            elemento=lis[aux]
+            if indice==0:
+                text.textLine(elemento)
+                
+            indice +=1
+            if indice==1:
+                text.textLine("Alfabeto: "+elemento)
+            if indice==2:
+                text.textLine("Estados: "+elemento)
+            if indice==3:
+                text.textLine("Estado inicial: "+elemento)
+            if indice==4:
+                text.textLine("Estado final: "+elemento)
+                text.textLine("Transiciones:")
+            if indice>4 and elemento !="%":
+                text.textLine(elemento)
+            
+            if elemento== "%":
+                indice=0
+                text.textLine()
+            
+            
+
+            
+            aux+=1
+        text.textLine()
+        text.textLine("AFD generado con Graphviz")
+        pdf.drawText(text)
+        
+        pdf.save()
+        webbrowser.open_new_tab('ReporteAFD.pdf')
+        
+    def generarPDF_AFN(self):
+        w, h = A4
+        pdf = canvas.Canvas("ReporteAFN.pdf", pagesize=A4)
+        pdf.setTitle("Reporte de AFN")
+        text = pdf.beginText(50, h - 50)
+        text.setFont("Times-Roman", 12)
+
+        aux=0
+        indice=0
+        
+        while aux < len(lis_nombre):
+            elemento=lis_nombre[aux]
+            if indice==0:
+                text.textLine(elemento)
+            indice +=1
+            if indice==1:
+                text.textLine("Alfabeto: "+elemento)
+            if indice==2:
+                text.textLine("Estados: "+elemento)
+            if indice==3:
+                text.textLine("Estado inicial: "+elemento)
+            if indice==4:
+                text.textLine("Estado final: "+elemento)
+                text.textLine("Transiciones:")
+            if indice>4 and elemento !="%":
+                text.textLine(elemento)
+            
+            if elemento== "%":
+                indice=0
+            
+            
+
+            
+            aux+=1
+        text.textLine()
+        text.textLine("AFD generado con Graphviz")
+        pdf.drawText(text)
+        
+        pdf.save()
+        webbrowser.open_new_tab('ReporteAFN.pdf')
 
 root=Tk()
 app=Mi_ventan(root)
