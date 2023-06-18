@@ -1,0 +1,6 @@
+digraph {
+	A [label="Estado A" shape=circle]
+	B [label="Estado B" shape=doublecircle]
+	A -> B [label="Transición 1"]
+	B -> A [label="Transición 2"]
+}

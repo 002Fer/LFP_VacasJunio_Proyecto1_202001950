@@ -1,5 +1,5 @@
 from tkinter import *
-from modulo_afd import listasimple
+
 from tkinter.filedialog import askopenfilename
 from graphviz import Digraph
 import webbrowser
@@ -60,11 +60,19 @@ class Mi_ventan(Frame):
         boton_ayuda=Button(ventana2, text='Ayuda',bg='#BDBDBD' )
         boton_salir=Button(ventana2, text='Salir',bg='#BDBDBD', command=ventana2.destroy )
 
-        boton_crearAFD.place(x=120,y=50, width=100, height=30)
-        boton_evaluar.place(x=120,y=90, width=100, height=30)
-        boton_reporte.place(x=120,y=130, width=100, height=30)
-        boton_ayuda.place(x=120,y=170, width=100, height=30)
-        boton_salir.place(x=120,y=210, width=100, height=30)
+        curso2=Label(ventana2, text='Lab. Lenguajes Formales y de Programacion P')
+        nombre2=Label(ventana2,text="Fernando Misael Morales Ortíz")
+        carne2=Label(ventana2, text='202001950')
+
+        curso2.place(x=200,y=75,width=290,height=35)
+        nombre2.place(x=200,y=115,width=290,height=35)
+        carne2.place(x=200,y=155,width=290,height=35)
+
+        boton_crearAFD.place(x=75,y=50, width=100, height=30)
+        boton_evaluar.place(x=75,y=90, width=100, height=30)
+        boton_reporte.place(x=75,y=130, width=100, height=30)
+        boton_ayuda.place(x=75,y=170, width=100, height=30)
+        boton_salir.place(x=75,y=210, width=100, height=30)
 
     def modulo_afn(self):
         ventana3=Toplevel()
@@ -78,11 +86,19 @@ class Mi_ventan(Frame):
         boton_ayuda=Button(ventana3, text='Ayuda',bg='#BDBDBD' )
         boton_salir=Button(ventana3, text='Salir',bg='#BDBDBD', command=ventana3.destroy)
 
-        boton_crearAFD.place(x=120,y=50, width=100, height=30)
-        boton_evaluar.place(x=120,y=90, width=100, height=30)
-        boton_reporte.place(x=120,y=130, width=100, height=30)
-        boton_ayuda.place(x=120,y=170, width=100, height=30)
-        boton_salir.place(x=120,y=210, width=100, height=30)
+        boton_crearAFD.place(x=75,y=50, width=100, height=30)
+        boton_evaluar.place(x=75,y=90, width=100, height=30)
+        boton_reporte.place(x=75,y=130, width=100, height=30)
+        boton_ayuda.place(x=75,y=170, width=100, height=30)
+        boton_salir.place(x=75,y=210, width=100, height=30)
+
+        curso2=Label(ventana3, text='Lab. Lenguajes Formales y de Programacion P')
+        nombre2=Label(ventana3,text="Fernando Misael Morales Ortíz")
+        carne2=Label(ventana3, text='202001950')
+
+        curso2.place(x=200,y=75,width=290,height=35)
+        nombre2.place(x=200,y=115,width=290,height=35)
+        carne2.place(x=200,y=155,width=290,height=35)
       
     def formulario_afn(self):
         ventana4=Toplevel()
@@ -189,8 +205,17 @@ class Mi_ventan(Frame):
         boton_seleccionar=Button(ventana5,text="Seleccionar AFD")
         boton_reporte=Button(ventana5, text="Generar reporte OE")
 
-        boton_seleccionar.place(x=100, y=50, width=120, height=30)
-        boton_reporte.place(x=100, y=100, width=120, height=30)
+        boton_seleccionar.place(x=75, y=75, width=120, height=30)
+        boton_reporte.place(x=75, y=125, width=120, height=30)
+
+        curso2=Label(ventana5, text='Lab. Lenguajes Formales y de Programacion P')
+        nombre2=Label(ventana5,text="Fernando Misael Morales Ortíz")
+        carne2=Label(ventana5, text='202001950')
+
+        curso2.place(x=200,y=75,width=290,height=35)
+        nombre2.place(x=200,y=115,width=290,height=35)
+        carne2.place(x=200,y=155,width=290,height=35)
+        
 
     def ventana_seleccionar_archivo(self):
         ventana_abrir=Toplevel()
@@ -207,7 +232,7 @@ class Mi_ventan(Frame):
 
 
     def buscar_archivo(self):
-        lista=listasimple()
+        
         try:
             self.file = askopenfilename(title="Cargar un archivo", filetypes=[("Archivos", f'*.afd')])
             self.text = self.file
@@ -217,10 +242,6 @@ class Mi_ventan(Frame):
             for lineas in self.archivo:
                 #archivo2=lineas.split("\n")
                 lis.append(lineas)
-            print(lis)
-            print(lis[0])
-            print(lis[12])
-            print("%" in lis)
 
         except:
             print('Error, no se ha seleccionado ningún archivo')
@@ -282,10 +303,7 @@ class Mi_ventan(Frame):
             if elemento== "%":
                 indice=0
                 text.textLine()
-            
-            
-
-            
+ 
             aux+=1
         text.textLine()
         text.textLine("AFD generado con Graphviz")
@@ -323,10 +341,8 @@ class Mi_ventan(Frame):
             
             if elemento== "%":
                 indice=0
-            
-            
-
-            
+                text.textLine()
+     
             aux+=1
         text.textLine()
         text.textLine("AFD generado con Graphviz")

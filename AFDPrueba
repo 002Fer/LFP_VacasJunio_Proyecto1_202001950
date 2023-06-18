@@ -4,5 +4,5 @@ digraph AFD {
 	B
 	node [shape=circle]
 	A
-	A -> B [label=1]
+	A -> B [label=7]
 }
