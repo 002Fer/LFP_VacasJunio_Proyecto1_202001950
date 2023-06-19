@@ -1,13 +1,46 @@
 digraph AFD {
 	rankdir=LR size="8,5"
-	node [shape=doublecircle]
-	Bzzzzz
 	node [shape=circle]
 	A
+	node [shape=circle]
+	A
+	node [shape=circle]
+	B
+	node [shape=circle]
+	B
 	node [shape=circle]
 	C
 	node [shape=circle]
 	D
-	A -> B [label=""]
-	C -> x [label=""]
+	node [shape=circle]
+	C
+	node [shape=circle]
+	D
+	node [shape=circle]
+	A
+	node [shape=circle]
+	A
+	node [shape=circle]
+	B
+	node [shape=circle]
+	C
+	node [shape=circle]
+	C
+	node [shape=circle]
+	B
+	node [shape=circle]
+	Q1
+	node [shape=circle]
+	Q2
+	node [shape=circle]
+	Q3
+	node [shape=circle]
+	Q3
+	node [shape=circle]
+	Q4
+	node [shape=circle]
+	Q4
+	A -> A [label=A]
+	A -> A [label=A]
+	Q1 -> Q1 [label=Q1]
 }

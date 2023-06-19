@@ -1,0 +1,29 @@
+digraph AFD {
+	rankdir=LR size="8,5"
+	node [shape=circle]
+	A
+	node [shape=circle]
+	A
+	node [shape=circle]
+	Q1
+	A -> A [label=A]
+	A -> A [label=A]
+	B -> B [label=B]
+	B -> B [label=B]
+	C -> C [label=C]
+	D -> D [label=D]
+	C -> C [label=C]
+	D -> D [label=D]
+	A -> A [label=A]
+	A -> A [label=A]
+	B -> B [label=B]
+	C -> C [label=C]
+	C -> C [label=C]
+	B -> B [label=B]
+	Q1 -> Q1 [label=Q1]
+	Q2 -> Q2 [label=Q2]
+	Q3 -> Q3 [label=Q3]
+	Q3 -> Q3 [label=Q3]
+	Q4 -> Q4 [label=Q4]
+	Q4 -> Q4 [label=Q4]
+}

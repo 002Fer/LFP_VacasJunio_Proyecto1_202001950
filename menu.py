@@ -17,6 +17,9 @@ lista_nuevos2=[]
 
 lista_estados=[] #lista para separar los estados
 nueva_lista = [] #lista para las transiciones
+
+lista_estadosAFN=[] #lista para separar los estados
+nueva_listaAFN = [] #lista para las transiciones
 lista_aux=[]
 class Mi_ventan(Frame):
     
@@ -89,7 +92,7 @@ class Mi_ventan(Frame):
             elif indice==1:
                 listaa_a.append(elemento)
                 indice+=1
-            if indice>1 and indice<5:
+            elif indice>1 and indice<=4:
                 indice +=1
 
             elif indice>4 and elemento !="%":
@@ -102,16 +105,22 @@ class Mi_ventan(Frame):
 
         for elemento2 in lista_nuevos:
             elementos_separados = elemento2.replace(",", ";").split(";")
-            nueva_lista.extend(elementos_separados)
             
+            nueva_lista.extend(elementos_separados)
+            nueva_lista.append("#")
+           
+        
         for elemento3 in listaa_a:
-            elementos_separados2=elemento3.split(",")
+            elementos_separados2 = elemento3.split(",")
+            
             lista_estados.extend(elementos_separados2)
             lista_estados.append("#")
-
+            
         
         print(nueva_lista)
         print(lista_estados)
+        self.generarGraficas()
+       
 
     def modulo_afn(self):
         ventana3=Toplevel()
@@ -138,6 +147,45 @@ class Mi_ventan(Frame):
         curso2.place(x=200,y=75,width=290,height=35)
         nombre2.place(x=200,y=115,width=290,height=35)
         carne2.place(x=200,y=155,width=290,height=35)
+
+        aux=0
+        indice=0
+        listaa_a=[]
+        while aux < len(lis_nombre):
+            elemento=lis_nombre[aux]
+            if indice==0:
+                indice+=1
+            elif indice==1:
+                listaa_a.append(elemento)
+                indice+=1
+            elif indice>1 and indice<=4:
+                indice +=1
+
+            elif indice>4 and elemento !="%":
+                lista_nuevos.append(elemento)
+                indice +=1
+            elif elemento== "%":
+                indice=0
+       
+            aux+=1
+
+        for elemento2 in lista_nuevos:
+            elementos_separados = elemento2.replace(",", ";").split(";")
+            
+            nueva_listaAFN.extend(elementos_separados)
+            nueva_listaAFN.append("#")
+           
+        
+        for elemento3 in listaa_a:
+            elementos_separados2 = elemento3.split(",")
+            
+            lista_estadosAFN.extend(elementos_separados2)
+            lista_estadosAFN.append("#")
+            
+        
+        print(nueva_listaAFN)
+        print(lista_estadosAFN)
+        self.generarGraficasAFN()
       
     def formulario_afn(self):
         ventana4=Toplevel()
@@ -342,6 +390,7 @@ class Mi_ventan(Frame):
         text.textLine()
         text.textLine("AFD generado con Graphviz")
         pdf.drawText(text)
+        pdf.drawInlineImage("AFDPrueba2.png", 100, 0, width=200, height=400, preserveAspectRatio=True)
         
         pdf.save()
         webbrowser.open_new_tab('ReporteAFD.pdf')
@@ -387,59 +436,96 @@ class Mi_ventan(Frame):
         text.textLine()
         text.textLine("AFD generado con Graphviz")
         pdf.drawText(text)
-        
+
+        pdf.drawInlineImage("AFDPrueba3.png", 100, 0, width=200, height=700, preserveAspectRatio=True)
         pdf.save()
         webbrowser.open_new_tab('ReporteAFN.pdf')
 
                 
     def generarGraficas(self):
 
-        dot = Digraph('AFD', filename='AFDPrueba', format='png')
+        dot = Digraph('AFD', filename='AFDPrueba2', format='png')
         dot.attr(rankdir='LR', size='8,5')
 
         aux=0
         indice=0
-        
+
         while aux < len(lista_estados):
-            elemento=lis_nombre[aux]
-            if indice==0:
-                
-                indice +=1
-            
-            elif indice==1:
-                
-                indice +=1
-            elif indice==2:
-                
-                indice +=1
-            elif indice==3:
-                
-                indice +=1
-            elif indice==4:
-                
-                indice +=1
-            elif indice>4 and elemento !="%":
-                
+            elemento=lista_estados[aux]
+            if indice<=0 and elemento!="#" :
+                dot.attr('node', shape='circle')
+                dot.node(elemento)
                 indice +=1
 
-            elif elemento== "%":
+            elif elemento== "#":
                 indice=0
 
             aux+=1
+        aux2=0
+        indice2=0
+        while aux2< len(nueva_lista):
+            elementoss=nueva_lista[aux2]
 
-        dot.attr('node', shape='doublecircle')
-        dot.node('Bzzzzz')
-        dot.attr('node', shape='circle')
-        dot.node('A')
-        dot.attr('node', shape='circle')
-        dot.node('C')
-        dot.attr('node', shape='circle')
-        dot.node('D')
-        dot.edge("A", "B", label="1")
-        dot.edge("C", "D", label="1")
+            if indice2==0:
+                inicio=elementoss
+                indice2 +=1
+            if indice2==1:
+                transicion=elementoss
+                indice2 +=1
+            if indice2==2:
+                final=elementoss
+                indice2 +=1
+            if elementoss=="#":
+                dot.edge(inicio, final, label=transicion)
+                indice2=0
+            aux2 +=1
 
-        dot.render('AFDPrueba', view=True)
 
+
+        dot.render('AFDPrueba2', view=False)
+
+    def generarGraficasAFN(self):
+
+        dot = Digraph('AFD', filename='AFDPrueba3', format='png')
+        dot.attr(rankdir='LR', size='8,5')
+
+        aux=0
+        indice=0
+
+        while aux < len(lista_estadosAFN):
+            elemento=lista_estadosAFN[aux]
+            if indice<=0 and elemento!="#" :
+                dot.attr('node', shape='circle')
+                dot.node(elemento)
+                indice +=1
+
+            elif elemento== "#":
+                indice=0
+
+            aux+=1
+        aux2=0
+        indice2=0
+
+        while aux2< len(nueva_listaAFN):
+            elementoss=nueva_listaAFN[aux2]
+
+            if indice2==0:
+                inicio=elementoss
+                indice2 +=1
+            if indice2==1:
+                transicion=elementoss
+                indice2 +=1
+            if indice2==2:
+                final=elementoss
+                indice2 +=1
+            if elementoss=="#":
+                dot.edge(inicio, final, label=transicion)
+                indice2=0
+            aux2 +=1
+
+
+
+        dot.render('AFDPrueba3', view=False)
     def ejemplo_afn(self):
         w, h = A4
         pdf = canvas.Canvas("EjemploAFN.pdf", pagesize=A4)
