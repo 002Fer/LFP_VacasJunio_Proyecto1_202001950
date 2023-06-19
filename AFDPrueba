@@ -1,8 +1,13 @@
 digraph AFD {
 	rankdir=LR size="8,5"
 	node [shape=doublecircle]
-	B
+	Bzzzzz
 	node [shape=circle]
 	A
-	A -> B [label=7]
+	node [shape=circle]
+	C
+	node [shape=circle]
+	D
+	A -> B [label=""]
+	C -> x [label=""]
 }

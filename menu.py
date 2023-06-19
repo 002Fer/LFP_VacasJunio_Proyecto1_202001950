@@ -1,5 +1,6 @@
 from tkinter import *
 
+import tkinter.messagebox
 from tkinter.filedialog import askopenfilename
 from graphviz import Digraph
 import webbrowser
@@ -7,12 +8,15 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4 
 
 import os
-lis=[]
-lis_nombre=[]
-lis_estados=[]
-lis_alfabeto=[]
-lis_estadoI=[]
-lis_estadosAcep=[]
+lis=[] #para guardar el archivo de entrada AFD
+lis_nombre=[] #para guardar el archivo de entrada AFN
+
+
+lista_nuevos=[]
+lista_nuevos2=[]
+
+lista_estados=[] #lista para separar los estados
+nueva_lista = [] #lista para las transiciones
 lista_aux=[]
 class Mi_ventan(Frame):
     
@@ -57,7 +61,7 @@ class Mi_ventan(Frame):
         boton_crearAFD=Button(ventana2, text='Crear AFD',bg='#BDBDBD', command=self.formulario_afd )
         boton_evaluar=Button(ventana2, text='Evaluar cadena',bg='#BDBDBD' )
         boton_reporte=Button(ventana2, text='Generar Reporte',bg='#BDBDBD', command=self.generarPDF )
-        boton_ayuda=Button(ventana2, text='Ayuda',bg='#BDBDBD' )
+        boton_ayuda=Button(ventana2, text='Ayuda',bg='#BDBDBD',command=self.ejemplo_afd )
         boton_salir=Button(ventana2, text='Salir',bg='#BDBDBD', command=ventana2.destroy )
 
         curso2=Label(ventana2, text='Lab. Lenguajes Formales y de Programacion P')
@@ -73,6 +77,41 @@ class Mi_ventan(Frame):
         boton_reporte.place(x=75,y=130, width=100, height=30)
         boton_ayuda.place(x=75,y=170, width=100, height=30)
         boton_salir.place(x=75,y=210, width=100, height=30)
+        
+
+        aux=0
+        indice=0
+        listaa_a=[]
+        while aux < len(lis):
+            elemento=lis[aux]
+            if indice==0:
+                indice+=1
+            elif indice==1:
+                listaa_a.append(elemento)
+                indice+=1
+            if indice>1 and indice<5:
+                indice +=1
+
+            elif indice>4 and elemento !="%":
+                lista_nuevos.append(elemento)
+                indice +=1
+            elif elemento== "%":
+                indice=0
+       
+            aux+=1
+
+        for elemento2 in lista_nuevos:
+            elementos_separados = elemento2.replace(",", ";").split(";")
+            nueva_lista.extend(elementos_separados)
+            
+        for elemento3 in listaa_a:
+            elementos_separados2=elemento3.split(",")
+            lista_estados.extend(elementos_separados2)
+            lista_estados.append("#")
+
+        
+        print(nueva_lista)
+        print(lista_estados)
 
     def modulo_afn(self):
         ventana3=Toplevel()
@@ -83,7 +122,7 @@ class Mi_ventan(Frame):
         boton_crearAFD=Button(ventana3, text='Crear AFD',bg='#BDBDBD',command=self.formulario_afn )
         boton_evaluar=Button(ventana3, text='Evaluar cadena',bg='#BDBDBD' )
         boton_reporte=Button(ventana3, text='Generar Reporte',bg='#BDBDBD',command=self.generarPDF_AFN )
-        boton_ayuda=Button(ventana3, text='Ayuda',bg='#BDBDBD' )
+        boton_ayuda=Button(ventana3, text='Ayuda',bg='#BDBDBD',command=self.ejemplo_afn )
         boton_salir=Button(ventana3, text='Salir',bg='#BDBDBD', command=ventana3.destroy)
 
         boton_crearAFD.place(x=75,y=50, width=100, height=30)
@@ -134,7 +173,7 @@ class Mi_ventan(Frame):
         self.estadoAcep_afn.place(x=250,y=165, width=150, height=30)
         self.transicion_afn.place(x=250,y=205, width=150, height=40)
 
-        boton_Guardar=Button(ventana4, text="Guardar",command=self.imprimir)
+        boton_Guardar=Button(ventana4, text="Guardar")
         boton_Guardar.place(x=200, y=250, width=100, height=30)
 
 
@@ -146,18 +185,15 @@ class Mi_ventan(Frame):
         estadoI1=self.estadoI_afn.get()
         estadoA1=self.estadoAcep_afn.get()
         trans1=self.transicion_afn.get()
-        lista_aux.append(nombre1)
-        lista_aux.append(estados1)
-        lista_aux.append(alfabeto1)
-        lista_aux.append(estadoI1)
-        lista_aux.append(estadoA1)
-        lista_aux.append(trans1)
+        lis_nombre.extend(nombre1)
+        lis_nombre.extend(estados1)
+        lis_nombre.extend(alfabeto1)
+        lis_nombre.extend(estadoI1)
+        lis_nombre.extend(estadoA1)
+        lis_nombre.extend(trans1)
+        print("informacion guardad")
 
-        lis.append(lista_aux)
-
-    def imprimir(self):
-        for i in lis:
-            print(i)
+        tkinter.messagebox.showinfo("Guardado","Se guardado el nuevo elemento")
 
     def formulario_afd(self):
         ventana6=Toplevel()
@@ -242,7 +278,8 @@ class Mi_ventan(Frame):
             for lineas in self.archivo:
                 #archivo2=lineas.split("\n")
                 lis.append(lineas)
-
+            
+            tkinter.messagebox.showinfo("Archivo","Se cargo el archivo")
         except:
             print('Error, no se ha seleccionado ningún archivo')
 
@@ -258,19 +295,10 @@ class Mi_ventan(Frame):
             for lineas in self.archivo:
                 
                 lis_nombre.append(lineas)
+            tkinter.messagebox.showinfo("Archivo","Se cargo el archivo")
             
         except:
             print('Error, no se ha seleccionado ningún archivo')
-
-    def generarDOT(self):
-        dot = Digraph('AFD', filename='AFDPrueba', format='png')
-        dot.attr(rankdir='LR', size='8,5')
-        dot.attr('node', shape='doublecircle')
-        dot.node('B')
-        dot.attr('node', shape='circle')
-        dot.node('A')
-        dot.edge('A', 'B', label='1') # A,1;B
-        dot.render('AFDPrueba', view=False)
 
     def generarPDF(self):
         w, h = A4
@@ -281,30 +309,36 @@ class Mi_ventan(Frame):
 
         aux=0
         indice=0
-        
         while aux < len(lis):
+            
             elemento=lis[aux]
+            
             if indice==0:
-                text.textLine(elemento)
-                
-            indice +=1
-            if indice==1:
+                text.textLine("Nombre "+elemento)
+                indice +=1
+            elif indice==1:
                 text.textLine("Alfabeto: "+elemento)
-            if indice==2:
+                indice +=1
+            elif indice==2:
                 text.textLine("Estados: "+elemento)
-            if indice==3:
+                indice +=1
+            elif indice==3:
                 text.textLine("Estado inicial: "+elemento)
-            if indice==4:
+                indice +=1
+            elif indice==4:
                 text.textLine("Estado final: "+elemento)
                 text.textLine("Transiciones:")
-            if indice>4 and elemento !="%":
+                indice +=1
+            elif indice>4 and elemento !="%":
                 text.textLine(elemento)
-            
-            if elemento== "%":
+                indice +=1
+            elif elemento== "%":
                 indice=0
                 text.textLine()
- 
+            
+        
             aux+=1
+            
         text.textLine()
         text.textLine("AFD generado con Graphviz")
         pdf.drawText(text)
@@ -326,20 +360,26 @@ class Mi_ventan(Frame):
             elemento=lis_nombre[aux]
             if indice==0:
                 text.textLine(elemento)
-            indice +=1
-            if indice==1:
+                indice +=1
+            
+            elif indice==1:
                 text.textLine("Alfabeto: "+elemento)
-            if indice==2:
+                indice +=1
+            elif indice==2:
                 text.textLine("Estados: "+elemento)
-            if indice==3:
+                indice +=1
+            elif indice==3:
                 text.textLine("Estado inicial: "+elemento)
-            if indice==4:
+                indice +=1
+            elif indice==4:
                 text.textLine("Estado final: "+elemento)
                 text.textLine("Transiciones:")
-            if indice>4 and elemento !="%":
+                indice +=1
+            elif indice>4 and elemento !="%":
                 text.textLine(elemento)
-            
-            if elemento== "%":
+                indice +=1
+
+            elif elemento== "%":
                 indice=0
                 text.textLine()
      
@@ -351,6 +391,105 @@ class Mi_ventan(Frame):
         pdf.save()
         webbrowser.open_new_tab('ReporteAFN.pdf')
 
+                
+    def generarGraficas(self):
+
+        dot = Digraph('AFD', filename='AFDPrueba', format='png')
+        dot.attr(rankdir='LR', size='8,5')
+
+        aux=0
+        indice=0
+        
+        while aux < len(lista_estados):
+            elemento=lis_nombre[aux]
+            if indice==0:
+                
+                indice +=1
+            
+            elif indice==1:
+                
+                indice +=1
+            elif indice==2:
+                
+                indice +=1
+            elif indice==3:
+                
+                indice +=1
+            elif indice==4:
+                
+                indice +=1
+            elif indice>4 and elemento !="%":
+                
+                indice +=1
+
+            elif elemento== "%":
+                indice=0
+
+            aux+=1
+
+        dot.attr('node', shape='doublecircle')
+        dot.node('Bzzzzz')
+        dot.attr('node', shape='circle')
+        dot.node('A')
+        dot.attr('node', shape='circle')
+        dot.node('C')
+        dot.attr('node', shape='circle')
+        dot.node('D')
+        dot.edge("A", "B", label="1")
+        dot.edge("C", "D", label="1")
+
+        dot.render('AFDPrueba', view=True)
+
+    def ejemplo_afn(self):
+        w, h = A4
+        pdf = canvas.Canvas("EjemploAFN.pdf", pagesize=A4)
+        pdf.setTitle("Reporte de AFN")
+        text = pdf.beginText(50, h - 50)
+        text.setFont("Times-Roman", 12)
+        text.textLine("AFN")
+        text.textLine("Un autómata finito no determinista es un modelo computacional en el cual puede tener multiples ")
+        text.textLine("opciones para poder hacer una transicion a otro estado y tambien permite transiciones con epsilon")
+        text.textLine("permitiendo que el autómata se mueva de un estado a otro sin consumir un símbolo de entrada")
+        text.textLine("pero un punto negativo es que es mas dificiles de analizar al tener muchas transiciones.")
+        text.textLine("Alfabeto: x")
+        text.textLine("Estados: A, B, C")
+        text.textLine("Estado inicial: A")
+        text.textLine("Estado final: B")
+        text.textLine("Transiciones:")
+        text.textLine("A,X;B")
+        text.textLine("A,1;C")
+        text.textLine("C,Ɛ;B")
+        text.textLine()
+        
+        pdf.drawText(text)
+        pdf.drawInlineImage("ejemploAFN.PNG", 100, 0, width=200, height=200, preserveAspectRatio=True)
+        pdf.save()
+        webbrowser.open_new_tab('EjemploAFN.pdf')
+
+    def ejemplo_afd(self):
+        w, h = A4
+        pdf = canvas.Canvas("EjemploAFD.pdf", pagesize=A4)
+        pdf.setTitle("Reporte de AFD")
+        text = pdf.beginText(50, h - 50)
+        text.setFont("Times-Roman", 12)
+        text.textLine("AFN")
+        text.textLine("Un autómata finito determinista es un modelo computacional con transiciones deterministas y un comportamiento  ")
+        text.textLine("predecible porque para hacer una transicion a otro estado solo admite una unica entrada")
+        text.textLine("es bastante facil de comprender e ideal para el diseño de algoritmos rapidos. ")
+        text.textLine("Alfabeto: a, b")
+        text.textLine("Estados: q0, q1, q2")
+        text.textLine("Estado inicial: q0")
+        text.textLine("Estado final: q2")
+        text.textLine("Transiciones:")
+        text.textLine("q0,a;q1")
+        text.textLine("q1,b;q2")
+        text.textLine("q2,b;q1")
+        text.textLine()
+        
+        pdf.drawText(text)
+        pdf.drawInlineImage("ejemploAFD.PNG", 100, 0, width=200, height=200, preserveAspectRatio=True)
+        pdf.save()
+        webbrowser.open_new_tab('EjemploAFD.pdf')
 root=Tk()
 app=Mi_ventan(root)
 app.mainloop()
